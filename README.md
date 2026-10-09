@@ -29,7 +29,7 @@ A collection of custom ESLint rules for improving code quality, consistency, and
 Install the package as a development dependency:
 
 ```bash
-pnpm add -D @sabzidev/eslint-rules
+p i -D @sabzidev/eslint-rules
 ```
 
 ---
