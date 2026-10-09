@@ -162,5 +162,5 @@ export default config;
 
 Developed by **Abolfazl Sabzmohammadi**.
 
-- GitHub: [SabziDev](https://github.com/SabziDev)
+- GitHub: [github.com/SabziDev](https://github.com/SabziDev)
 - Website: [Sabzi.Dev](https://Sabzi.Dev)
