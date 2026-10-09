@@ -22,7 +22,10 @@
   "main": "./dist/index.js",
   "exports": "./dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "docs",
+    "README.md",
+    "LICENSE"
   ],
   "publishConfig": {
     "access": "public"
