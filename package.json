@@ -1,0 +1,41 @@
+{
+  "name": "@sabzidev/eslint-rules",
+  "description": "A collection of ESLint rules for better code quality, consistency, and maintainability.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SabziDev/eslint-rules"
+  },
+  "license": "MIT",
+  "keywords": [
+    "SabziDev",
+    "eslint",
+    "eslint-plugin",
+    "eslint-rules",
+    "code-quality",
+    "code-style",
+    "linting",
+    "developer-tools"
+  ],
+  "author": "Abolfazl Sabzmohammadi <SabziDev@gmail.com> (https://Sabzi.Dev)",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.9",
+    "@fullstacksjs/eslint-config": "^15.3.0",
+    "eslint-plugin-sonarjs": "^4.2.2",
+    "eslint-plugin-unicorn": "^77.0.0",
+    "vite": "^8.3.0"
+  }
+}
