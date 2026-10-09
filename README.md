@@ -9,7 +9,9 @@ A collection of custom ESLint rules for improving code quality, consistency, and
 <div align="center">
   <img src="https://img.shields.io/npm/dm/@sabzidev/eslint-rules?style=flat-square&&color=16A34A&label=DOWNLOADS" alt="DOWNLOADS" />
   <img src="https://img.shields.io/npm/v/@sabzidev/eslint-rules?style=flat-square&color=16A34A&label=VERSION" alt="VERSION" />
+
   <br />
+
   <img src="./docs/images/logo.webp" alt="SabziDev logo" height="300" width="70%" />
 
 [GITHUB](https://github.com/SabziDev/eslint-rules) | [NPM](https://npmjs.com/package/@sabzidev/eslint-rules)
