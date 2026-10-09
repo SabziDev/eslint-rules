@@ -7,10 +7,10 @@ A collection of custom ESLint rules for improving code quality, consistency, and
 ## 👀 Overview
 
 <div align="center">
-  <img src="https://img.shields.io/npm/dm/@sabzidev/eslint-rules?style=flat-square&&color=16A34A&label=DOWNLOADS" alt="DOWNLOADS"/>
-  <img src="https://img.shields.io/npm/v/@sabzidev/eslint-rules?style=flat-square&color=16A34A&label=VERSION" alt="VERSION"/>
+  <img src="https://img.shields.io/npm/dm/@sabzidev/eslint-rules?style=flat-square&&color=16A34A&label=DOWNLOADS" alt="DOWNLOADS" />
+  <img src="https://img.shields.io/npm/v/@sabzidev/eslint-rules?style=flat-square&color=16A34A&label=VERSION" alt="VERSION" />
   <br />
-  <img src="./docs/images/logo.webp" alt="SabziDev logo" height="300" width="70%"/>
+  <img src="./docs/images/logo.webp" alt="SabziDev logo" height="300" width="70%" />
 
 [GITHUB](https://github.com/SabziDev/eslint-rules) | [NPM](https://npmjs.com/package/@sabzidev/eslint-rules)
 </div>
@@ -29,18 +29,18 @@ A collection of custom ESLint rules for improving code quality, consistency, and
 Install the package as a development dependency:
 
 ```bash
-p i -D @sabzidev/eslint-rules
+pnpm i -D @sabzidev/eslint-rules
 ```
 
 ---
 
 ## 🚀 Usage
 
-Choose **one** of the following configuration methods.
+Choose **one** of the following configuration methods for your existing `eslint.config.js` file:
 
 ### ● Recommended Configuration
 
-Add the recommended configuration to your existing `eslint.config.js` file:
+Add the recommended configuration:
 
 ```js
 import sabzidev from "@sabzidev/eslint-rules";
@@ -56,7 +56,7 @@ This enables all rules included in the recommended configuration with their pred
 
 ### ● Custom Configuration
 
-Alternatively, register the plugin and configure each rule individually in your existing `eslint.config.js` file:
+Alternatively, register the plugin and configure each rule individually:
 
 ```js
 import sabzidev from "@sabzidev/eslint-rules";
@@ -89,6 +89,8 @@ export default defineConfig([
 For a more comprehensive linting setup, combine `@sabzidev/eslint-rules` with [`@fullstacksjs/eslint-config`](https://www.npmjs.com/package/@fullstacksjs/eslint-config), [`eslint-plugin-sonarjs`](https://www.npmjs.com/package/eslint-plugin-sonarjs), and [`eslint-plugin-unicorn`](https://www.npmjs.com/package/eslint-plugin-unicorn).
 
 This combination brings together code-quality rules, bug detection, maintainability checks, and custom linting rules.
+
+**Configuration for `eslint.config.js`:**
 
 ```js
 import { defineConfig } from "@fullstacksjs/eslint-config";
