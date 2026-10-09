@@ -6,11 +6,11 @@ A collection of custom ESLint rules for improving code quality, consistency, and
 
 ## 👀 Overview
 
-`@sabzidev/eslint-rules` is a collection of custom ESLint rules designed to catch common issues, reduce unnecessary code, and maintain consistent coding style across JavaScript and TypeScript projects.
-![DOWNLOADS](https://img.shields.io/npm/dm/@sabzidev/eslint-rules?style=flat-square&&color=16A34A&label=DOWNLOADS)
-![VERSION](https://img.shields.io/npm/v/@sabzidev/eslint-rules?style=flat-square&color=16A34A&label=VERSION)
 <div align="center">
-  <img src="./docs/images/logo.webp" alt="PROJECT_NAME screenshot" height="450" width="40%"/>
+  <img src="https://img.shields.io/npm/dm/@sabzidev/eslint-rules?style=flat-square&&color=16A34A&label=DOWNLOADS" alt="DOWNLOADS"/>
+  <img src="https://img.shields.io/npm/v/@sabzidev/eslint-rules?style=flat-square&color=16A34A&label=VERSION" alt="VERSION"/>
+  <br />
+  <img src="./docs/images/logo.webp" alt="SabziDev logo" height="300" width="80%"/>
 
 [GITHUB](https://github.com/SabziDev/eslint-rules) | [NPM](https://npmjs.com/package/@sabzidev/eslint-rules)
 </div>
