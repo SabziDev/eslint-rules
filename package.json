@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "author": "Abolfazl Sabzmohammadi <SabziDev@gmail.com> (https://Sabzi.Dev)",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "main": "./dist/index.js",
   "exports": "./dist/index.js",
@@ -34,11 +34,11 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "eslint": "^10.12.0",
-    "prettier": "^3.9.9",
     "@fullstacksjs/eslint-config": "^15.3.0",
+    "eslint": "^10.12.0",
     "eslint-plugin-sonarjs": "^4.2.2",
     "eslint-plugin-unicorn": "^77.0.0",
+    "prettier": "^3.9.9",
     "vite": "^8.3.0"
   }
 }
