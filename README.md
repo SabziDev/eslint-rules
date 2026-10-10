@@ -74,7 +74,7 @@ export default defineConfig([
       "@sabzidev/padding-before-jump-statement": "warn",
       "@sabzidev/sort-comments": "warn",
       "@sabzidev/sort-jsx-props": "warn",
-      "@sabzidev/sort-object-props": "warn",
+      "@sabzidev/sort-props": "warn",
     },
   },
 ]);
