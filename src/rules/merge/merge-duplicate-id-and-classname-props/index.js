@@ -70,8 +70,8 @@ const mergeDuplicateIdAndClassNameProps = {
                 ),
               ];
 
-              for (let i = 1; i < attributes.length; i++) {
-                fixes.push(fixer.remove(attributes[i]));
+              for (let index = 1; index < attributes.length; index++) {
+                fixes.push(fixer.remove(attributes[index]));
               }
 
               return fixes;

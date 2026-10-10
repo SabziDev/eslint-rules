@@ -24,19 +24,19 @@ const noInvalidIdAndClassNameValue = {
         return { invalidValue: "empty", index: -2 };
       }
 
-      for (const [i, element] of elements.entries()) {
+      for (const [index, element] of elements.entries()) {
         if (element.type === "Literal") {
           if (element.value === "") {
-            return { invalidValue: "empty", index: i };
+            return { invalidValue: "empty", index };
           }
           if ([false, null, true].includes(element.value)) {
-            return { invalidValue: String(element.value), index: i };
+            return { invalidValue: String(element.value), index };
           }
         } else if (
           element.type === "Identifier" &&
           element.name === "undefined"
         ) {
-          return { invalidValue: "undefined", index: i };
+          return { invalidValue: "undefined", index };
         }
       }
 
@@ -86,11 +86,11 @@ const noInvalidIdAndClassNameValue = {
             expression.callee.name === "clsx" &&
             expression.arguments.length === 1
           ) {
-            const arg = expression.arguments[0];
+            const argument = expression.arguments[0];
 
-            if (arg.type === "ArrayExpression") {
+            if (argument.type === "ArrayExpression") {
               isArrayExpression = true;
-              const result = checkArrayElements(arg.elements);
+              const result = checkArrayElements(argument.elements);
 
               if (result) {
                 ({ invalidValue, index: invalidElementIndex } = result);
@@ -100,12 +100,12 @@ const noInvalidIdAndClassNameValue = {
                 expression.type === "CallExpression" &&
                 expression.callee.name === "clsx"
               ) {
-                const clsxArg = expression.arguments[0];
+                const clsxArgument = expression.arguments[0];
 
                 if (
-                  clsxArg?.type === "ArrayExpression" &&
-                  clsxArg.elements.length === 1 &&
-                  clsxArg.elements[0]?.type === "Literal"
+                  clsxArgument?.type === "ArrayExpression" &&
+                  clsxArgument.elements.length === 1 &&
+                  clsxArgument.elements[0]?.type === "Literal"
                 ) {
                   context.report({
                     data: { value: "single-item-array", attribute },
@@ -114,25 +114,28 @@ const noInvalidIdAndClassNameValue = {
                     fix: (fixer) =>
                       fixer.replaceText(
                         node.value,
-                        `{${clsxArg.elements[0].raw}}`,
+                        `{${clsxArgument.elements[0].raw}}`,
                       ),
                   });
 
                   return;
                 }
               }
-            } else if (arg.type === "Literal" && arg.value === "") {
+            } else if (argument.type === "Literal" && argument.value === "") {
               invalidValue = "empty";
             } else if (
-              arg.type === "Literal" &&
-              [false, null, true].includes(arg.value)
+              argument.type === "Literal" &&
+              [false, null, true].includes(argument.value)
             ) {
-              invalidValue = String(arg.value);
-            } else if (arg.type === "Identifier" && arg.name === "undefined") {
+              invalidValue = String(argument.value);
+            } else if (
+              argument.type === "Identifier" &&
+              argument.name === "undefined"
+            ) {
               invalidValue = "undefined";
             } else if (
-              arg.type === "ObjectExpression" &&
-              arg.properties.length === 0
+              argument.type === "ObjectExpression" &&
+              argument.properties.length === 0
             ) {
               invalidValue = "empty";
             }

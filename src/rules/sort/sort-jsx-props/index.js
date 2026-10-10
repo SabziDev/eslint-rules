@@ -1,6 +1,7 @@
+/* eslint-disable unicorn/no-array-sort */
 /* eslint-disable unicorn/consistent-function-scoping */
 
-import { eventHandlersOrder, propsOrder } from "../props-order";
+import { eventHandlersOrder, sortOrder } from "../sort-order";
 
 const sortJsxProps = {
   meta: {
@@ -13,9 +14,9 @@ const sortJsxProps = {
 
   create(context) {
     const { sourceCode } = context;
-    const firstGroupSet = new Set(propsOrder);
+    const firstGroupSet = new Set(sortOrder);
 
-    const isEventHandler = (attrName) => /^on[A-Z]/.test(attrName);
+    const isEventHandler = (attributeName) => /^on[A-Z]/.test(attributeName);
 
     const getEventPriority = (handlerName) => {
       const index = eventHandlersOrder.indexOf(handlerName);
@@ -25,24 +26,24 @@ const sortJsxProps = {
 
     return {
       JSXOpeningElement(node) {
-        const allAttrs = node.attributes;
+        const allAttributes = node.attributes;
 
-        const spreads = allAttrs.filter(
-          (attr) => attr.type === "JSXSpreadAttribute",
+        const spreads = allAttributes.filter(
+          (attribute) => attribute.type === "JSXSpreadAttribute",
         );
 
-        const normalAttrs = allAttrs.filter(
-          (attr) => attr.type === "JSXAttribute",
+        const normalAttributes = allAttributes.filter(
+          (attribute) => attribute.type === "JSXAttribute",
         );
 
-        if (normalAttrs.length === 0 && spreads.length === 0) return;
+        if (normalAttributes.length === 0 && spreads.length === 0) return;
 
-        const firstGroup = propsOrder.flatMap((name) =>
-          normalAttrs.filter((attr) => attr.name.name === name),
+        const firstGroup = sortOrder.flatMap((name) =>
+          normalAttributes.filter((attribute) => attribute.name.name === name),
         );
 
-        const eventHandlers = normalAttrs
-          .filter((attr) => isEventHandler(attr.name.name))
+        const eventHandlers = normalAttributes
+          .filter((attribute) => isEventHandler(attribute.name.name))
           .sort((a, b) => {
             const priorityA = getEventPriority(a.name.name);
             const priorityB = getEventPriority(b.name.name);
@@ -52,8 +53,10 @@ const sortJsxProps = {
               : priorityA - priorityB;
           });
 
-        const classStyle = normalAttrs
-          .filter((attr) => ["className", "style"].includes(attr.name.name))
+        const classStyle = normalAttributes
+          .filter((attribute) =>
+            ["className", "style"].includes(attribute.name.name),
+          )
           .sort((a, b) => {
             if (a.name.name === "className" && b.name.name === "style") {
               return -1;
@@ -64,8 +67,8 @@ const sortJsxProps = {
               : 0;
           });
 
-        const otherProps = normalAttrs.filter((attr) => {
-          const { name } = attr.name;
+        const otherProps = normalAttributes.filter((attribute) => {
+          const { name } = attribute.name;
 
           return (
             !firstGroupSet.has(name) &&
@@ -85,18 +88,18 @@ const sortJsxProps = {
         let isNeedsFix = false;
         const currentOrder = [];
 
-        for (const attr of allAttrs) {
+        for (const attribute of allAttributes) {
           if (
-            attr.type === "JSXAttribute" ||
-            attr.type === "JSXSpreadAttribute"
+            attribute.type === "JSXAttribute" ||
+            attribute.type === "JSXSpreadAttribute"
           ) {
-            currentOrder.push(attr);
+            currentOrder.push(attribute);
           }
         }
 
         if (currentOrder.length === sortedNormal.length) {
-          for (const [i, element] of currentOrder.entries()) {
-            if (element === sortedNormal[i]) {
+          for (const [index, element] of currentOrder.entries()) {
+            if (element === sortedNormal[index]) {
               continue;
             }
 
@@ -111,7 +114,7 @@ const sortJsxProps = {
         if (!isNeedsFix) return;
 
         const opening = `<${sourceCode.getText(node.name)} ${sortedNormal
-          .map((attr) => sourceCode.getText(attr))
+          .map((attribute) => sourceCode.getText(attribute))
           .join(" ")}${node.selfClosing ? " />" : ">"}`;
 
         context.report({

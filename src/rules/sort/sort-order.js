@@ -1,4 +1,4 @@
-const propsOrder = [
+const sortOrder = [
   "prop",
   "props",
   "children",
@@ -34,6 +34,6 @@ const propsOrder = [
   "replace",
   "viewTransition",
 ];
-const eventHandlersOrder = ["onClick", "onChange", "onKeyUp"];
+const eventHandlersOrder = ["onClick", "onChange", "onKeyUp", "onKeyDown"];
 
-export { eventHandlersOrder, propsOrder };
+export { eventHandlersOrder, sortOrder };

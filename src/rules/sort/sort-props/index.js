@@ -1,10 +1,12 @@
+/* eslint-disable max-params */
+/* eslint-disable unicorn/no-array-sort */
 /* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable unicorn/consistent-function-scoping */
 
-import { eventHandlersOrder, propsOrder } from "../props-order";
+import { eventHandlersOrder, sortOrder } from "../sort-order";
 
-const sortObjectProps = {
+const sortProps = {
   meta: {
     type: "suggestion",
     fixable: "code",
@@ -18,7 +20,7 @@ const sortObjectProps = {
 
   create(context) {
     const { sourceCode } = context;
-    const firstGroupSet = new Set(propsOrder);
+    const firstGroupSet = new Set(sortOrder);
 
     const isEventHandler = (name) => /^on[A-Z]/.test(name);
 
@@ -65,7 +67,7 @@ const sortObjectProps = {
     const sortItems = (items) => {
       if (items.length === 0) return items;
 
-      const firstGroup = propsOrder.flatMap((name) =>
+      const firstGroup = sortOrder.flatMap((name) =>
         items.filter((item) => getKeyName(item) === name),
       );
 
@@ -80,11 +82,7 @@ const sortObjectProps = {
       });
 
       const eventHandlers = items
-        .filter((item) => {
-          const keyName = getKeyName(item);
-
-          return isEventHandler(keyName);
-        })
+        .filter((item) => isEventHandler(getKeyName(item)))
         .sort((a, b) => {
           const priorityA = getEventPriority(getKeyName(a));
           const priorityB = getEventPriority(getKeyName(b));
@@ -95,18 +93,12 @@ const sortObjectProps = {
         });
 
       const classStyle = items
-        .filter((item) => {
-          const keyName = getKeyName(item);
-
-          return ["className", "style"].includes(keyName);
-        })
+        .filter((item) => ["className", "style"].includes(getKeyName(item)))
         .sort((a, b) => {
           const nameA = getKeyName(a);
           const nameB = getKeyName(b);
 
-          if (nameA === "className" && nameB === "style") {
-            return -1;
-          }
+          if (nameA === "className" && nameB === "style") return -1;
 
           return nameA === "style" && nameB === "className" ? 1 : 0;
         });
@@ -121,9 +113,7 @@ const sortObjectProps = {
       for (const prop of properties) {
         if (isSpread(prop)) {
           if (currentChunk.length > 0) {
-            const sortedChunk = sortItems(currentChunk);
-
-            result.push(...sortedChunk);
+            result.push(...sortItems(currentChunk));
             currentChunk = [];
           }
 
@@ -134,9 +124,7 @@ const sortObjectProps = {
       }
 
       if (currentChunk.length > 0) {
-        const sortedChunk = sortItems(currentChunk);
-
-        result.push(...sortedChunk);
+        result.push(...sortItems(currentChunk));
       }
 
       return result;
@@ -153,25 +141,13 @@ const sortObjectProps = {
         (member) => !sortableMembers.includes(member),
       );
 
-      const sortedMembers = sortItems(sortableMembers);
-
-      return [...sortedMembers, ...otherMembers];
+      return [...sortItems(sortableMembers), ...otherMembers];
     };
 
     const areItemsDifferent = (current, sorted) => {
-      if (current.length !== sorted.length) {
-        return true;
-      }
-
-      for (const [i, item] of current.entries()) {
-        if (item === sorted[i]) {
-          continue;
-        }
-
-        return true;
-      }
-
-      return false;
+      return current.length === sorted.length
+        ? current.some((item, index) => item !== sorted[index])
+        : true;
     };
 
     const buildObjectText = (items) => {
@@ -182,6 +158,26 @@ const sortObjectProps = {
       return members.map((member) => sourceCode.getText(member)).join("\n");
     };
 
+    const reportSortedItems = (node, items, sorted, messageId, buildText) => {
+      if (!areItemsDifferent(items, sorted)) return;
+
+      const firstItem = items[0];
+      const lastItem = items.at(-1);
+
+      context.report({
+        node,
+        messageId,
+        fix(fixer) {
+          const sortedText = buildText(sorted);
+
+          return fixer.replaceTextRange(
+            [firstItem.range[0], lastItem.range[1]],
+            sortedText,
+          );
+        },
+      });
+    };
+
     const processObjectPattern = (node, messageId) => {
       const { properties } = node;
 
@@ -189,25 +185,9 @@ const sortObjectProps = {
 
       const sorted = sortPropertiesWithSpreadBarriers(properties);
 
-      if (!areItemsDifferent(properties, sorted)) return;
-
-      const firstProperty = properties[0];
-      const lastProperty = properties.at(-1);
-
-      const start = firstProperty.range[0];
-      const end = lastProperty.range[1];
-
-      context.report({
-        node,
-        messageId,
-        fix(fixer) {
-          const sortedText = sorted
-            .map((property) => sourceCode.getText(property))
-            .join(", ");
-
-          return fixer.replaceTextRange([start, end], sortedText);
-        },
-      });
+      reportSortedItems(node, properties, sorted, messageId, (items) =>
+        items.map((item) => sourceCode.getText(item)).join(", "),
+      );
     };
 
     const processFunctionParams = (node) => {
@@ -216,12 +196,75 @@ const sortObjectProps = {
       if (!params || params.length === 0) return;
 
       for (const param of params) {
-        if (param.type !== "ObjectPattern") {
-          continue;
+        if (param.type === "ObjectPattern") {
+          processObjectPattern(param, "wrongParams");
+        }
+      }
+
+      if (
+        params.length <= 1 ||
+        params.some((param) => param.type !== "Identifier")
+      ) {
+        return;
+      }
+
+      const getParamCategory = (name) => {
+        const propIndex = sortOrder.indexOf(name);
+
+        if (propIndex !== -1) {
+          return { category: 0, priority: propIndex };
         }
 
-        processObjectPattern(param, "wrongParams");
-      }
+        if (isEventHandler(name)) {
+          return {
+            category: 2,
+            priority: getEventPriority(name),
+          };
+        }
+
+        if (name === "className") {
+          return { category: 3, priority: 0 };
+        }
+
+        return { category: name === "style" ? 4 : 1, priority: 0 };
+      };
+
+      const sortedParams = params
+        .map((param, index) => ({
+          param,
+          index,
+          ...getParamCategory(param.name),
+        }))
+        .sort((a, b) => {
+          if (a.category !== b.category) {
+            return a.category - b.category;
+          }
+
+          return a.priority === b.priority
+            ? a.index - b.index
+            : a.priority - b.priority;
+        })
+        .map(({ param }) => param);
+
+      if (!areItemsDifferent(params, sortedParams)) return;
+
+      const firstParam = params[0];
+      const lastParam = params.at(-1);
+
+      context.report({
+        node,
+        messageId: "wrongParams",
+        fix(fixer) {
+          const replacement = sortedParams
+            .map((param) => sourceCode.getText(param))
+            .join(", ");
+
+          return fixer.replaceTextRange(
+            [firstParam.range[0], lastParam.range[1]],
+            replacement,
+          );
+        },
+      });
     };
 
     const processTypeMembers = (node) => {
@@ -231,23 +274,13 @@ const sortObjectProps = {
 
       const sorted = sortTypeMembers(members);
 
-      if (!areItemsDifferent(members, sorted)) return;
-
-      const firstMember = members[0];
-      const lastMember = members.at(-1);
-
-      const start = firstMember.range[0];
-      const end = lastMember.range[1];
-
-      context.report({
+      reportSortedItems(
         node,
-        messageId: "wrongTypeProperties",
-        fix(fixer) {
-          const sortedText = buildTypeMembersText(sorted);
-
-          return fixer.replaceTextRange([start, end], sortedText);
-        },
-      });
+        members,
+        sorted,
+        "wrongTypeProperties",
+        buildTypeMembersText,
+      );
     };
 
     return {
@@ -264,9 +297,7 @@ const sortObjectProps = {
           node,
           messageId: "wrongOrder",
           fix(fixer) {
-            const sortedText = buildObjectText(sorted);
-
-            return fixer.replaceText(node, sortedText);
+            return fixer.replaceText(node, buildObjectText(sorted));
           },
         });
       },
@@ -275,29 +306,27 @@ const sortObjectProps = {
         processObjectPattern(node, "wrongDestructure");
       },
 
-      TSTypeLiteral(node) {
-        processTypeMembers(node);
-      },
+      TSTypeLiteral: processTypeMembers,
 
-      TSInterfaceBody(node) {
-        processTypeMembers(node);
-      },
-
-      TSTypeAliasDeclaration(node) {
-        if (node.typeAnnotation?.type !== "TSTypeLiteral") {
-          return;
-        }
-
-        processTypeMembers(node.typeAnnotation);
-      },
+      TSInterfaceBody: processTypeMembers,
 
       FunctionDeclaration: processFunctionParams,
 
       FunctionExpression: processFunctionParams,
 
       ArrowFunctionExpression: processFunctionParams,
+
+      TSDeclareFunction: processFunctionParams,
+
+      TSFunctionType: processFunctionParams,
+
+      TSCallSignatureDeclaration: processFunctionParams,
+
+      TSConstructSignatureDeclaration: processFunctionParams,
+
+      TSMethodSignature: processFunctionParams,
     };
   },
 };
 
-export default sortObjectProps;
+export default sortProps;

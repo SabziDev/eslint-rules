@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-array-sort */
 /* eslint-disable sonarjs/super-linear-regex */
 /* eslint-disable no-shadow */
 /* eslint-disable unicorn/no-array-callback-reference */

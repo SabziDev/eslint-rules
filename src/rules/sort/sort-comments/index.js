@@ -41,10 +41,10 @@ const sortComments = {
 
         let eslintSection = "";
 
-        for (let i = 0; i < eslintDisableComments.length; i++) {
-          eslintSection += eslintDisableComments[i].text;
+        for (let index = 0; index < eslintDisableComments.length; index++) {
+          eslintSection += eslintDisableComments[index].text;
 
-          if (i < eslintDisableComments.length - 1) {
+          if (index < eslintDisableComments.length - 1) {
             eslintSection += "\n";
           }
         }
@@ -53,8 +53,12 @@ const sortComments = {
 
         let newText = text;
 
-        for (let i = eslintDisableComments.length - 1; i >= 0; i--) {
-          const comment = eslintDisableComments[i];
+        for (
+          let index = eslintDisableComments.length - 1;
+          index >= 0;
+          index--
+        ) {
+          const comment = eslintDisableComments[index];
           const before = newText.slice(0, comment.range[0]);
           const after = newText.slice(comment.range[1]);
           newText = before + after;

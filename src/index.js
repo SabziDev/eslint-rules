@@ -1,24 +1,18 @@
 import packageJson from "../package.json" with { type: "json" };
-import mergeDuplicateIdAndClassNameProps from "./rules/merge/merge-duplicate-id-and-classname-props";
-import mergeExports from "./rules/merge/merge-exports";
-import noInvalidIdAndClassNameValue from "./rules/no-invalid/no-invalid-id-and-classname-value";
-import noUselessEmptyType from "./rules/no-useless/no-useless-empty-type";
-import noUselessTemplateLiteral from "./rules/no-useless/no-useless-template-literal";
-import paddingBeforeJumpStatement from "./rules/padding/padding-before-jump-statement";
-import sortComments from "./rules/sort/sort-comments";
-import sortJsxProps from "./rules/sort/sort-jsx-props";
-import sortObjectProps from "./rules/sort/sort-object-props";
+import * as rulesRegistry from "./rules/rules-registry";
 
 const rules = {
-  "merge-duplicate-id-and-classname-props": mergeDuplicateIdAndClassNameProps,
-  "merge-exports": mergeExports,
-  "no-invalid-id-and-classname-value": noInvalidIdAndClassNameValue,
-  "no-useless-empty-type": noUselessEmptyType,
-  "no-useless-template-literal": noUselessTemplateLiteral,
-  "padding-before-jump-statement": paddingBeforeJumpStatement,
-  "sort-comments": sortComments,
-  "sort-jsx-props": sortJsxProps,
-  "sort-object-props": sortObjectProps,
+  "merge-duplicate-id-and-classname-props":
+    rulesRegistry.mergeDuplicateIdAndClassNameProps,
+  "merge-exports": rulesRegistry.mergeExports,
+  "no-invalid-id-and-classname-value":
+    rulesRegistry.noInvalidIdAndClassNameValue,
+  "no-useless-empty-type": rulesRegistry.noUselessEmptyType,
+  "no-useless-template-literal": rulesRegistry.noUselessTemplateLiteral,
+  "padding-before-jump-statement": rulesRegistry.paddingBeforeJumpStatement,
+  "sort-comments": rulesRegistry.sortComments,
+  "sort-jsx-props": rulesRegistry.sortJsxProps,
+  "sort-props": rulesRegistry.sortProps,
 };
 
 const plugin = {
