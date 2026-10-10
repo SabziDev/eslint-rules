@@ -161,17 +161,17 @@ export default config;
 
 ## 📋 Available Rules
 
-| Rule                                     | Description                              |
-| :--------------------------------------- | :--------------------------------------- |
-| `merge-duplicate-id-and-classname-props` | Merges duplicate id and className props. |
-| `merge-exports`                          | Merges or organizes export declarations. |
-| `no-invalid-id-and-classname-value`      | Detects invalid id and className values. |
-| `no-useless-empty-type`                  | Detects unnecessary empty types.         |
-| `no-useless-template-literal`            | Detects unnecessary template literals.   |
-| `padding-before-jump-statement`          | Enforces padding before jump statements. |
-| `sort-comments`                          | Sorts comments.                          |
-| `sort-jsx-props`                         | Sorts JSX props.                         |
-| `sort-object-props`                      | Sorts object properties.                 |
+| Rule                                     | Description                                                                |
+| :--------------------------------------- | :------------------------------------------------------------------------- |
+| `merge-duplicate-id-and-classname-props` | Merges duplicate id and className props.                                   |
+| `merge-exports`                          | Merges or organizes export declarations.                                   |
+| `no-invalid-id-and-classname-value`      | Detects invalid id and className values.                                   |
+| `no-useless-empty-type`                  | Detects unnecessary empty types.                                           |
+| `no-useless-template-literal`            | Detects unnecessary template literals.                                     |
+| `padding-before-jump-statement`          | Enforces padding before jump statements.                                   |
+| `sort-comments`                          | Sorts comments.                                                            |
+| `sort-jsx-props`                         | Sorts JSX props.                                                           |
+| `sort-props`                             | Sorts object properties, function parameters, and TypeScript type members. |
 
 ---
 
