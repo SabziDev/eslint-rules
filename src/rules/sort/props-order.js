@@ -1,5 +1,9 @@
 const propsOrder = [
+  "prop",
+  "props",
   "children",
+  "param",
+  "params",
   "key",
   "id",
   "ref",

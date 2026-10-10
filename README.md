@@ -26,7 +26,7 @@ A collection of custom ESLint rules for improving code quality, consistency, and
 
 ---
 
-## 📦 Installation
+## 🚀📦 Installation & Usage
 
 Install the package as a development dependency:
 
@@ -34,11 +34,7 @@ Install the package as a development dependency:
 pnpm i -D @sabzidev/eslint-rules
 ```
 
----
-
-## 🚀 Usage
-
-Choose **one** of the following configuration methods for your existing `eslint.config.js` file:
+Choose **one** of the following configuration methods for your `eslint.config.js` file:
 
 ### ● Recommended Configuration
 
@@ -54,7 +50,7 @@ export default defineConfig([
 ]);
 ```
 
-This enables all rules included in the recommended configuration with their predefined severity levels.
+This enables all recommended rules with their predefined severity levels.
 
 ### ● Custom Configuration
 
@@ -86,11 +82,19 @@ export default defineConfig([
 
 ---
 
-## ⭐ Recommended Tooling Setup
+## ⭐ Recommended ESLint & Prettier Setup
 
-For a more comprehensive linting setup, combine `@sabzidev/eslint-rules` with [`@fullstacksjs/eslint-config`](https://www.npmjs.com/package/@fullstacksjs/eslint-config), [`eslint-plugin-sonarjs`](https://www.npmjs.com/package/eslint-plugin-sonarjs), and [`eslint-plugin-unicorn`](https://www.npmjs.com/package/eslint-plugin-unicorn).
+Install the required dependencies:
 
-This combination brings together code-quality rules, bug detection, maintainability checks, and custom linting rules.
+```bash
+pnpm i -D eslint prettier @fullstacksjs/eslint-config @sabzidev/eslint-rules eslint-plugin-sonarjs eslint-plugin-unicorn
+```
+
+For a comprehensive code-quality setup, combine `ESLint`, `Prettier`, [`@fullstacksjs/eslint-config`](https://npmjs.com/package/@fullstacksjs/eslint-config), [`@sabzidev/eslint-rules`](https://npmjs.com/package/@sabzidev/eslint-rules), [`eslint-plugin-sonarjs`](https://npmjs.com/package/eslint-plugin-sonarjs), and [`eslint-plugin-unicorn`](https://npmjs.com/package/eslint-plugin-unicorn).
+
+This setup combines code formatting, code-quality checks, bug detection, maintainability rules, and custom ESLint rules.
+
+This setup combines code-quality rules, bug detection, maintainability checks, and custom linting rules.
 
 **Configuration for `eslint.config.js`:**
 
@@ -110,28 +114,39 @@ const baseRules = {
   eqeqeq: ["error", "always"],
   "no-console": "warn",
 };
+
 const plugins = [
   sabzidev.configs.recommended,
   sonarjs.configs.recommended,
   unicorn.configs.recommended,
 ];
+
 const pluginsRules = {
   "unicorn/filename-case": "off",
-  "unicorn/prefer-global-this": "off",
-  "unicorn/name-replacements": "off",
-  "unicorn/no-array-sort": "off",
+  "unicorn/name-replacements": [
+    "error",
+    {
+      replacements: {
+        prop: false,
+        props: false,
+        param: false,
+        params: false,
+        ref: false,
+        refs: false,
+        prev: false,
+        e: false,
+        res: false,
+        err: false,
+      },
+    },
+  ],
   "unicorn/no-null": "off",
+  "unicorn/prefer-global-this": "off",
   "unicorn/default-export-style": "off",
-
-  "jsx-a11y/click-events-have-key-events": "off",
-  "jsx-a11y/no-noninteractive-element-interactions": "off",
 };
 
 const config = defineConfig(
-  {
-    tailwind: { entryPoint: "./src/input.css" },
-    rules: baseRules,
-  },
+  { rules: baseRules, tailwind: { entryPoint: "./src/input.css" } },
 
   plugins,
   { rules: pluginsRules },
@@ -140,23 +155,23 @@ const config = defineConfig(
 export default config;
 ```
 
-**Note:** Customize the rules to match your project's requirements and verify compatibility with your installed plugin versions.
+**Note:** Adjust the rules to suit your project and ensure compatibility with your installed plugin versions.
 
 ---
 
 ## 📋 Available Rules
 
-| Rule                                     | Description                                  |
-| :--------------------------------------- | :------------------------------------------- |
-| `merge-duplicate-id-and-classname-props` | Merges duplicate `id` and `className` props. |
-| `merge-exports`                          | Merges or organizes export declarations.     |
-| `no-invalid-id-and-classname-value`      | Detects invalid `id` and `className` values. |
-| `no-useless-empty-type`                  | Detects unnecessary empty types.             |
-| `no-useless-template-literal`            | Detects unnecessary template literals.       |
-| `padding-before-jump-statement`          | Enforces padding before jump statements.     |
-| `sort-comments`                          | Sorts comments.                              |
-| `sort-jsx-props`                         | Sorts JSX props.                             |
-| `sort-object-props`                      | Sorts object properties.                     |
+| Rule                                     | Description                              |
+| :--------------------------------------- | :--------------------------------------- |
+| `merge-duplicate-id-and-classname-props` | Merges duplicate id and className props. |
+| `merge-exports`                          | Merges or organizes export declarations. |
+| `no-invalid-id-and-classname-value`      | Detects invalid id and className values. |
+| `no-useless-empty-type`                  | Detects unnecessary empty types.         |
+| `no-useless-template-literal`            | Detects unnecessary template literals.   |
+| `padding-before-jump-statement`          | Enforces padding before jump statements. |
+| `sort-comments`                          | Sorts comments.                          |
+| `sort-jsx-props`                         | Sorts JSX props.                         |
+| `sort-object-props`                      | Sorts object properties.                 |
 
 ---
 

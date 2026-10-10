@@ -15,14 +15,26 @@ const baseRules = {
 const plugins = [sonarjs.configs.recommended, unicorn.configs.recommended];
 const pluginsRules = {
   "unicorn/filename-case": "off",
-  "unicorn/prefer-global-this": "off",
-  "unicorn/name-replacements": "off",
-  "unicorn/no-array-sort": "off",
+  "unicorn/name-replacements": [
+    "error",
+    {
+      replacements: {
+        prop: false,
+        props: false,
+        param: false,
+        params: false,
+        ref: false,
+        refs: false,
+        prev: false,
+        e: false,
+        res: false,
+        err: false,
+      },
+    },
+  ],
   "unicorn/no-null": "off",
+  "unicorn/prefer-global-this": "off",
   "unicorn/default-export-style": "off",
-
-  "jsx-a11y/click-events-have-key-events": "off",
-  "jsx-a11y/no-noninteractive-element-interactions": "off",
 };
 
 const config = defineConfig(
