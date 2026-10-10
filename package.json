@@ -1,11 +1,6 @@
 {
   "name": "@sabzidev/eslint-rules",
   "description": "A collection of ESLint rules for better code quality, consistency, and maintainability.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SabziDev/eslint-rules"
-  },
-  "license": "MIT",
   "keywords": [
     "SabziDev",
     "eslint",
@@ -16,6 +11,11 @@
     "linting",
     "developer-tools"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SabziDev/eslint-rules"
+  },
+  "license": "MIT",
   "author": "Abolfazl Sabzmohammadi <SabziDev@gmail.com> (https://Sabzi.Dev)",
   "version": "1.0.5",
   "type": "module",
