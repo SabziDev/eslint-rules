@@ -14,8 +14,10 @@ const sortProps = {
       wrongOrder: "Object properties should be ordered!",
       wrongDestructure: "Destructured properties should be ordered!",
       wrongParams: "Function parameters should be ordered!",
+      wrongCallArguments: "Function call arguments should be ordered!",
       wrongTypeProperties: "Type properties should be ordered!",
     },
+    schema: [],
   },
 
   create(context) {
@@ -190,6 +192,46 @@ const sortProps = {
       );
     };
 
+    const getParamCategory = (name) => {
+      const propIndex = sortOrder.indexOf(name);
+
+      if (propIndex !== -1) {
+        return { category: 0, priority: propIndex };
+      }
+
+      if (isEventHandler(name)) {
+        return {
+          category: 2,
+          priority: getEventPriority(name),
+        };
+      }
+
+      if (name === "className") {
+        return { category: 3, priority: 0 };
+      }
+
+      return { category: name === "style" ? 4 : 1, priority: 0 };
+    };
+
+    const sortIdentifiers = (items) => {
+      return items
+        .map((item, index) => ({
+          item,
+          index,
+          ...getParamCategory(item.name),
+        }))
+        .sort((a, b) => {
+          if (a.category !== b.category) {
+            return a.category - b.category;
+          }
+
+          return a.priority === b.priority
+            ? a.index - b.index
+            : a.priority - b.priority;
+        })
+        .map(({ item }) => item);
+    };
+
     const processFunctionParams = (node) => {
       const { params } = node;
 
@@ -208,43 +250,7 @@ const sortProps = {
         return;
       }
 
-      const getParamCategory = (name) => {
-        const propIndex = sortOrder.indexOf(name);
-
-        if (propIndex !== -1) {
-          return { category: 0, priority: propIndex };
-        }
-
-        if (isEventHandler(name)) {
-          return {
-            category: 2,
-            priority: getEventPriority(name),
-          };
-        }
-
-        if (name === "className") {
-          return { category: 3, priority: 0 };
-        }
-
-        return { category: name === "style" ? 4 : 1, priority: 0 };
-      };
-
-      const sortedParams = params
-        .map((param, index) => ({
-          param,
-          index,
-          ...getParamCategory(param.name),
-        }))
-        .sort((a, b) => {
-          if (a.category !== b.category) {
-            return a.category - b.category;
-          }
-
-          return a.priority === b.priority
-            ? a.index - b.index
-            : a.priority - b.priority;
-        })
-        .map(({ param }) => param);
+      const sortedParams = sortIdentifiers(params);
 
       if (!areItemsDifferent(params, sortedParams)) return;
 
@@ -261,6 +267,70 @@ const sortProps = {
 
           return fixer.replaceTextRange(
             [firstParam.range[0], lastParam.range[1]],
+            replacement,
+          );
+        },
+      });
+    };
+
+    const getArgumentName = (argument) => {
+      if (argument.type === "Identifier") {
+        return argument.name;
+      }
+
+      return argument.type === "Literal" ||
+        argument.type === "StringLiteral" ||
+        argument.type === "NumericLiteral"
+        ? String(argument.value)
+        : null;
+    };
+
+    const processCallArguments = (node) => {
+      const { arguments: arguments_ } = node;
+
+      if (
+        arguments_.length <= 1 ||
+        arguments_.some(
+          (argument) =>
+            argument.type === "SpreadElement" ||
+            getArgumentName(argument) === null,
+        )
+      ) {
+        return;
+      }
+
+      const sortedArguments = arguments_
+        .map((argument, index) => ({
+          argument,
+          index,
+          ...getParamCategory(getArgumentName(argument)),
+        }))
+        .sort((a, b) => {
+          if (a.category !== b.category) {
+            return a.category - b.category;
+          }
+
+          return a.priority === b.priority
+            ? a.index - b.index
+            : a.priority - b.priority;
+        })
+        .map(({ argument }) => argument);
+
+      if (!areItemsDifferent(arguments_, sortedArguments)) return;
+
+      const firstArgument = arguments_[0];
+      const lastArgument = arguments_.at(-1);
+
+      context.report({
+        node,
+        messageId: "wrongCallArguments",
+        fix(fixer) {
+          const replacement = sortedArguments
+            .map((argument) => sourceCode.getText(argument))
+            .join(", ");
+
+          return fixer.replaceTextRange(
+            [firstArgument.range[0], lastArgument.range[1]],
             replacement,
           );
         },
@@ -325,6 +395,8 @@ const sortProps = {
       TSConstructSignatureDeclaration: processFunctionParams,
 
       TSMethodSignature: processFunctionParams,
+
+      CallExpression: processCallArguments,
     };
   },
 };
