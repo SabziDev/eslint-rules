@@ -114,13 +114,11 @@ const baseRules = {
   eqeqeq: ["error", "always"],
   "no-console": "warn",
 };
-
 const plugins = [
   sabzidev.configs.recommended,
   sonarjs.configs.recommended,
   unicorn.configs.recommended,
 ];
-
 const pluginsRules = {
   "unicorn/filename-case": "off",
   "unicorn/name-replacements": [
@@ -143,6 +141,8 @@ const pluginsRules = {
   "unicorn/no-null": "off",
   "unicorn/prefer-global-this": "off",
   "unicorn/default-export-style": "off",
+
+  "@typescript-eslint/no-explicit-any": "error",
 };
 
 const config = defineConfig(
