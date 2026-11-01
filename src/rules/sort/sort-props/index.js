@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-array-includes */
 /* eslint-disable max-params */
 /* eslint-disable unicorn/no-array-sort */
 /* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
@@ -79,7 +80,9 @@ const sortProps = {
         return (
           !firstGroupSet.has(keyName) &&
           !isEventHandler(keyName) &&
-          !["className", "style"].includes(keyName)
+          !["className", "style", "activeClassName", "activeStyle"].includes(
+            keyName,
+          )
         );
       });
 
@@ -95,14 +98,20 @@ const sortProps = {
         });
 
       const classStyle = items
-        .filter((item) => ["className", "style"].includes(getKeyName(item)))
+        .filter((item) =>
+          ["className", "style", "activeClassName", "activeStyle"].includes(
+            getKeyName(item),
+          ),
+        )
         .sort((a, b) => {
-          const nameA = getKeyName(a);
-          const nameB = getKeyName(b);
+          const order = [
+            "className",
+            "style",
+            "activeClassName",
+            "activeStyle",
+          ];
 
-          if (nameA === "className" && nameB === "style") return -1;
-
-          return nameA === "style" && nameB === "className" ? 1 : 0;
+          return order.indexOf(getKeyName(a)) - order.indexOf(getKeyName(b));
         });
 
       return [...firstGroup, ...otherProps, ...eventHandlers, ...classStyle];
