@@ -1,6 +1,5 @@
 # Environment variables
-.env
-.env.*
+.env*
 !.env.example
 
 # testing
@@ -8,12 +7,7 @@
 
 # Logs
 logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+*.log*
 
 # Editor directories and files
 .vscode/*
@@ -37,10 +31,6 @@ node_modules
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
 dev-dist
 dist
 dist-ssr
