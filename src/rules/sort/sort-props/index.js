@@ -5,7 +5,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable unicorn/consistent-function-scoping */
 
-import { eventHandlersOrder, sortOrder } from "../sort-order";
+import { eventHandlersOrder, propsOrder } from "../sort-order";
 
 const sortProps = {
   meta: {
@@ -23,7 +23,7 @@ const sortProps = {
 
   create(context) {
     const { sourceCode } = context;
-    const firstGroupSet = new Set(sortOrder);
+    const firstGroupSet = new Set(propsOrder);
 
     const isEventHandler = (name) => /^on[A-Z]/.test(name);
 
@@ -70,7 +70,7 @@ const sortProps = {
     const sortItems = (items) => {
       if (items.length === 0) return items;
 
-      const firstGroup = sortOrder.flatMap((name) =>
+      const firstGroup = propsOrder.flatMap((name) =>
         items.filter((item) => getKeyName(item) === name),
       );
 
@@ -202,7 +202,7 @@ const sortProps = {
     };
 
     const getParamCategory = (name) => {
-      const propIndex = sortOrder.indexOf(name);
+      const propIndex = propsOrder.indexOf(name);
 
       if (propIndex !== -1) {
         return { category: 0, priority: propIndex };

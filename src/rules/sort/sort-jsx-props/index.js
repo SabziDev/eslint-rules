@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-array-sort */
 /* eslint-disable unicorn/consistent-function-scoping */
 
-import { eventHandlersOrder, sortOrder } from "../sort-order";
+import { eventHandlersOrder, propsOrder } from "../sort-order";
 
 const sortJsxProps = {
   meta: {
@@ -14,7 +14,7 @@ const sortJsxProps = {
 
   create(context) {
     const { sourceCode } = context;
-    const firstGroupSet = new Set(sortOrder);
+    const firstGroupSet = new Set(propsOrder);
 
     const isEventHandler = (attributeName) => /^on[A-Z]/.test(attributeName);
 
@@ -38,7 +38,7 @@ const sortJsxProps = {
 
         if (normalAttributes.length === 0 && spreads.length === 0) return;
 
-        const firstGroup = sortOrder.flatMap((name) =>
+        const firstGroup = propsOrder.flatMap((name) =>
           normalAttributes.filter((attribute) => attribute.name.name === name),
         );
 

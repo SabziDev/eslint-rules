@@ -1,4 +1,4 @@
-const sortOrder = [
+const propsOrder = [
   "prop",
   "props",
   "children",
@@ -89,4 +89,4 @@ const sortOrder = [
 ];
 const eventHandlersOrder = ["onClick", "onChange", "onKeyUp", "onKeyDown"];
 
-export { eventHandlersOrder, sortOrder };
+export { eventHandlersOrder, propsOrder };
