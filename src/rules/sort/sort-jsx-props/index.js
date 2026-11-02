@@ -15,6 +15,12 @@ const sortJsxProps = {
   create(context) {
     const { sourceCode } = context;
     const firstGroupSet = new Set(propsOrder);
+    const classStyleProps = new Map([
+      ["className", 0],
+      ["style", 1],
+      ["activeClassName", 2],
+      ["activeStyle", 3],
+    ]);
 
     const isEventHandler = (attributeName) => /^on[A-Z]/.test(attributeName);
 
@@ -54,18 +60,12 @@ const sortJsxProps = {
           });
 
         const classStyle = normalAttributes
-          .filter((attribute) =>
-            ["className", "style"].includes(attribute.name.name),
-          )
-          .sort((a, b) => {
-            if (a.name.name === "className" && b.name.name === "style") {
-              return -1;
-            }
-
-            return a.name.name === "style" && b.name.name === "className"
-              ? 1
-              : 0;
-          });
+          .filter((attribute) => classStyleProps.has(attribute.name.name))
+          .sort(
+            (a, b) =>
+              classStyleProps.get(a.name.name) -
+              classStyleProps.get(b.name.name),
+          );
 
         const otherProps = normalAttributes.filter((attribute) => {
           const { name } = attribute.name;
@@ -73,7 +73,7 @@ const sortJsxProps = {
           return (
             !firstGroupSet.has(name) &&
             !isEventHandler(name) &&
-            !["className", "style"].includes(name)
+            !classStyleProps.has(attribute.name.name)
           );
         });
 
