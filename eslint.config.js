@@ -27,6 +27,7 @@ const pluginsRules = {
         refs: false,
         prev: false,
         e: false,
+        req: false,
         res: false,
         err: false,
         opt: false,
