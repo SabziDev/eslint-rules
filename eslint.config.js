@@ -32,6 +32,7 @@ const pluginsRules = {
         err: false,
         opt: false,
         opts: false,
+        env: false,
         btn: false,
       },
     },
