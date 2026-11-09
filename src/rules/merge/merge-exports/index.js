@@ -30,13 +30,45 @@ const mergeExports = {
     const getExportedName = (specifier) =>
       specifier.exported.name ?? specifier.exported.value;
 
+    const isSorted = (specifiers) =>
+      specifiers.every(
+        (specifier, index) =>
+          index === 0 ||
+          getExportedName(specifiers[index - 1]).localeCompare(
+            getExportedName(specifier),
+          ) <= 0,
+      );
+
+    const isAlreadyMerged = (body, exportNodes) => {
+      const namedExports = exportNodes.filter(isNamedExport);
+      const defaultExport = exportNodes.find(isDefaultExport);
+
+      const expectedExportCount =
+        Number(namedExports.length > 0) + Number(Boolean(defaultExport));
+
+      const exportsAreAtEnd =
+        exportNodes.length === expectedExportCount &&
+        body
+          .slice(-exportNodes.length)
+          .every((node, index) => node === exportNodes[index]);
+
+      const hasCorrectOrder =
+        !defaultExport || exportNodes.at(-1) === defaultExport;
+
+      const namedExportsAreSorted =
+        namedExports.length <= 1 &&
+        namedExports.every(({ specifiers }) => isSorted(specifiers));
+
+      return exportsAreAtEnd && hasCorrectOrder && namedExportsAreSorted;
+    };
+
     return {
       Program(program) {
         const { body } = program;
 
         const exportNodes = body.filter(isExport);
 
-        if (exportNodes.length === 0) {
+        if (exportNodes.length === 0 || isAlreadyMerged(body, exportNodes)) {
           return;
         }
 
@@ -91,18 +123,19 @@ const mergeExports = {
          */
         const content = remainingCode.replace(/\s+$/, "");
 
-        const expectedCode = `${content}\n\n${exportBlock}\n`;
-
-        if (sourceCode.text === expectedCode) {
-          return;
-        }
+        const expectedCode = `${
+          content ? `${content}\n\n` : ""
+        }${exportBlock}\n`;
 
         context.report({
           node: exportNodes[0],
           messageId: "mergeExports",
 
           fix(fixer) {
-            return fixer.replaceText(program, expectedCode);
+            return fixer.replaceTextRange(
+              [0, sourceCode.text.length],
+              expectedCode,
+            );
           },
         });
       },

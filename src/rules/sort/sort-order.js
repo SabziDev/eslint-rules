@@ -9,9 +9,22 @@ const propsOrder = [
   "id",
   "ref",
 
+  "dir",
+  "lang",
+  "suppressHydrationWarning",
+  "data-scroll-behavior",
+
   "data",
   "title",
   "desc",
+
+  "src",
+  "alt",
+  "loading",
+  "poster",
+  "preload",
+  "controls",
+
   "htmlFor",
   "type",
   "inputMode",
@@ -23,13 +36,6 @@ const propsOrder = [
   "max",
   "minLength",
   "maxLength",
-
-  "src",
-  "alt",
-  "loading",
-  "poster",
-  "preload",
-  "controls",
 
   "href",
   "target",
