@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "author": "Abolfazl Sabzmohammadi <SabziDev@gmail.com> (https://Sabzi.Dev)",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "type": "module",
   "main": "./dist/index.js",
   "exports": "./dist/index.js",
