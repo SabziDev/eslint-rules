@@ -31,6 +31,7 @@ const propsOrder = [
   "name",
   "value",
   "placeholder",
+  "blurDataURL",
   "autoComplete",
   "min",
   "max",
