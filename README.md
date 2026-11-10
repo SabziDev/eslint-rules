@@ -34,7 +34,7 @@ Install the package as a development dependency:
 pnpm i -D @sabzidev/eslint-rules
 ```
 
-Choose **one** of the following configuration methods for your `eslint.config.js` file:
+Choose **one** of the following configuration methods for your `eslint.config.mjs` file:
 
 ### ● Recommended Configuration
 
@@ -96,7 +96,7 @@ This setup combines code formatting, code-quality checks, bug detection, maintai
 
 This setup combines code-quality rules, bug detection, maintainability checks, and custom linting rules.
 
-**Configuration for `eslint.config.js`:**
+**Configuration for `eslint.config.mjs`:**
 
 ```js
 import { defineConfig } from "@fullstacksjs/eslint-config";
